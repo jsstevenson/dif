@@ -1,0 +1,12 @@
+Performs basic differentiation on supplied equations.
+
+Format: (diff 'VARIABLE 'EXPRESSION).
+Expressions are '(OPERATOR TERM1 TERM2).
+
+Supports:
+* Basic arithmetic operators and exponents
+* Basic trig functions
+* Nested expressions
+
+Currently working:
+* Robust simplification
