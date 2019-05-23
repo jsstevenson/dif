@@ -46,13 +46,22 @@
         [else ((get-func (get-op E) diff-dispatch) v E)]))
 
 ;;; Specific differentiation procedures
+;;; Thoughts:
+;    * Preprocess before. Not simplifying, but rearranging (eg, 
+;      put integers before variables in products, sort variables in alphabetic
+;      order)
+;    * Simplify after differentiation.
+;      * Check addition/multiplication for shared variables
+;    * Long-term: read naturally written expressions, sort into AST, then
+;      work from AST.
 
 (define (diff-constant v E)
   0)
 
 (define (simpl v E)
-  (if (integer? E)
-    E
+  (cond [(integer? E) E]
+        [(symbol? E) E]
+        [else 
     (let ([left (simpl v (get-left E))]
           [right (simpl v (get-right E))])
       (if (equal? (get-op E) '*)
@@ -61,7 +70,7 @@
               [(equal? right 1) left])
         (if (and (integer? left) (integer? right))
           ((get-op E) left right)
-          (list (get-op E) left right))))))
+          (list (get-op E) left right))))]))
 
 (define (diff-addit v E)
   (let ([ds-term (lambda (term) (diff v term))])
